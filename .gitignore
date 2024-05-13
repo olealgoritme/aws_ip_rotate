@@ -1,0 +1,6 @@
+out/
+*.html
+*.o
+app
+wrapped
+build/
