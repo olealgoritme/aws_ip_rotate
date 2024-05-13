@@ -19,6 +19,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(/opt/homebrew/include)
 link_directories(/opt/homebrew/lib)
 
+include_directories(/usr/local/include)
+link_directories(/usr/local/lib)
+
 # build target executable and library
 add_executable(wrapped src/wrapped.c src/ApiGateway.cpp src/ApiGatewayWrapper.cpp)
 add_library(aws-ip-rotate SHARED src/ApiGateway.cpp src/ApiGatewayWrapper.cpp)
