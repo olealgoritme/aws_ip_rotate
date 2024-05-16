@@ -22,11 +22,13 @@ link_directories(/opt/homebrew/lib)
 include_directories(/usr/local/include)
 link_directories(/usr/local/lib)
 
-# build target executable and library
+# build target executables and library
 add_executable(wrapped src/wrapped.c src/ApiGateway.cpp src/ApiGatewayWrapper.cpp)
+add_executable(app src/app.cpp src/ApiGateway.cpp)
 add_library(aws-ip-rotate SHARED src/ApiGateway.cpp src/ApiGatewayWrapper.cpp)
 
 target_link_libraries(wrapped aws-cpp-sdk-apigateway aws-cpp-sdk-core curl pthread)
+target_link_libraries(app aws-cpp-sdk-apigateway aws-cpp-sdk-core curl pthread)
 target_link_libraries(aws-ip-rotate PUBLIC aws-cpp-sdk-apigateway aws-cpp-sdk-core curl pthread)
 
 # install

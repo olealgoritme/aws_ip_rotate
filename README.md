@@ -16,6 +16,7 @@ export AWS_SECRET_ACCESS_KEY=fe0013442451337
 
 - AWS SDK CPP // https://github.com/aws/aws-sdk-cpp
 
-#### Example
+#### Examples
 
-- wrapped.c // Uses C wrapper
+- app.cpp // C++
+- wrapped.c // C
