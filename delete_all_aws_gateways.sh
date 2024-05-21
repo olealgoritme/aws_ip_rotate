@@ -14,6 +14,7 @@ for region in $regions; do
 	for api in $apis; do
 		echo "Deleting API Gateway $api in region $region..."
 		aws apigateway delete-rest-api --region $region --rest-api-id $api
+		sleep 30
 	done
 done
 
