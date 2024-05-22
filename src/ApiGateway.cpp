@@ -33,10 +33,6 @@ ApiGateway::ApiGateway(const std::string& site, const std::vector<std::string>& 
     Aws::InitAPI(options);
 }
 
-ApiGateway::~ApiGateway() {
-    Shutdown();
-}
-
 void ApiGateway::Shutdown() {
     std::cout << "Initiating Gateway teardowns.." << std::endl;
     while (!manager.IsEmpty()) {
@@ -234,7 +230,7 @@ std::string ApiGateway::Send(const std::string& url) {
             std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
             return "";
         } else if (response_code != 200) {
-            std::cerr << "HTTP Request failed, Status Code: " + std::to_string(response_code) << std::endl;
+            std::cerr << "HTTP Request failed for " << modifiedUrl << ", Status Code: " + std::to_string(response_code) << std::endl;
             return "";
         } else {
             std::cout << "API Gateway [" << chosenGateway.region << "] " << "REQ @ " << modifiedUrl << " Status: " << response_code << std::endl;
