@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <mutex>
 #include <aws/core/Aws.h>
 #include <aws/apigateway/APIGatewayClient.h>
 
@@ -70,6 +71,7 @@ public:
     GatewayManager manager;
 
 private:
+    std::once_flag shutdown_flag;
     std::string site;
     std::vector<std::string> regions;
 

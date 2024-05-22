@@ -39,14 +39,16 @@ ApiGateway::~ApiGateway() {
 }
 
 void ApiGateway::Shutdown() {
-    std::cout << "Initiating Gateway teardowns.." << std::endl;
-    while (!manager.IsEmpty()) {
-        Gateway gateway = manager.GetNextGateway();
-        DeleteGateway(gateway);
-        manager.DeleteGateway(gateway);
-    }
-    Aws::SDKOptions options;
-    Aws::ShutdownAPI(options);
+  std::call_once(shutdown_flag, [this]() {
+      std::cout << "Initiating Gateway teardowns.." << std::endl;
+      while (!manager.IsEmpty()) {
+          Gateway gateway = manager.GetNextGateway();
+          DeleteGateway(gateway);
+          manager.DeleteGateway(gateway);
+      }
+      Aws::SDKOptions options;
+      Aws::ShutdownAPI(options);
+  });
 }
 
 void ApiGateway::Start(bool force) {
