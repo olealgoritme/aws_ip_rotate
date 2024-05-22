@@ -204,9 +204,9 @@ bool ApiGateway::DeleteGateway(const Gateway& gateway) {
             }
         }
     }
-
     return false;
 }
+
 std::string ApiGateway::Send(const std::string& url) {
     if (manager.IsEmpty()) {
         std::cerr << "No API Gateways available." << std::endl;
