@@ -6,6 +6,8 @@
 #include <sstream>
 #include <iomanip>
 #include <future>
+#include <chrono>
+#include <thread>
 #include <curl/curl.h>
 #include <aws/core/utils/Outcome.h>
 #include <aws/apigateway/model/CreateRestApiRequest.h>
@@ -187,15 +189,24 @@ bool ApiGateway::DeleteGateway(const Gateway& gateway) {
     Aws::APIGateway::Model::DeleteRestApiRequest deleteRequest;
     deleteRequest.SetRestApiId(gateway.apiId);
 
-    auto deleteOutcome = client.DeleteRestApi(deleteRequest);
-    if (!deleteOutcome.IsSuccess()) {
-        std::cerr << "Failed to delete API Gateway: " << deleteOutcome.GetError().GetMessage() << std::endl;
-    } else {
-        std::cout << "Successfully deleted API Gateway with ID: " << gateway.apiId << std::endl;
-    }
-    return deleteOutcome.IsSuccess();
-}
+    const int maxAttempts = 5;
+    const std::chrono::seconds retryDelay(30);
 
+    for (int attempt = 1; attempt <= maxAttempts; ++attempt) {
+        auto deleteOutcome = client.DeleteRestApi(deleteRequest);
+        if (deleteOutcome.IsSuccess()) {
+            std::cout << "Successfully deleted API Gateway with ID: " << gateway.apiId << std::endl;
+            return true;
+        } else {
+            std::cerr << "Failed to delete API Gateway (attempt " << attempt << "): " << deleteOutcome.GetError().GetMessage() << std::endl;
+            if (attempt < maxAttempts) {
+                std::this_thread::sleep_for(retryDelay);
+            }
+        }
+    }
+
+    return false;
+}
 std::string ApiGateway::Send(const std::string& url) {
     if (manager.IsEmpty()) {
         std::cerr << "No API Gateways available." << std::endl;
