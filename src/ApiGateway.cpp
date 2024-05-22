@@ -33,6 +33,9 @@ ApiGateway::ApiGateway(const std::string& site, const std::vector<std::string>& 
     Aws::InitAPI(options);
 }
 
+ApiGateway::~ApiGateway() {
+}
+
 void ApiGateway::Shutdown() {
     std::cout << "Initiating Gateway teardowns.." << std::endl;
     while (!manager.IsEmpty()) {
