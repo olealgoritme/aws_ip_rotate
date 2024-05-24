@@ -200,7 +200,14 @@ bool ApiGateway::DeleteGateway(const Gateway& gateway) {
             std::cout << "Successfully deleted API Gateway with ID: " << gateway.apiId << std::endl;
             return true;
         } else {
-            std::cerr << "Failed to delete API Gateway (attempt " << attempt << "): " << deleteOutcome.GetError().GetMessage() << std::endl;
+            auto errorMsg = deleteOutcome.GetError().GetMessage();
+            auto exception = deleteOutcome.GetError().GetExceptionName();
+            if (!errorMsg.empty()) {
+                std::cerr << "Failed to delete API Gateway with ID " << gateway.apiId << " (attempt " << attempt << "): " << errorMsg << std::endl;
+            }
+            if (!exception.empty()) {
+                std::cerr << "Exception: " << exception << std::endl;
+            }
             if (attempt < maxAttempts) {
                 std::this_thread::sleep_for(retryDelay);
             }
